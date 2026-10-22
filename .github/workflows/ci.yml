@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  laravel-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'
+        extensions: mbstring, dom, fileinfo, mysql
+
+    - name: Copy Environment File
+      run: cp .env.example .env
+
+    - name: Install Composer Dependencies
+      run: composer install --prefer-dist --no-progress --no-interaction
+
+    - name: Generate App Key
+      run: php artisan key:generate
+
+    - name: Run Tests
+      run: php artisan test
+      env:
+        DB_CONNECTION: sqlite
+        DB_DATABASE: ':memory:'
