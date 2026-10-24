@@ -19,7 +19,10 @@ jobs:
         php-version: '8.2'
         tools: phpunit
 
+    - name: Install Dependencies
+      run: composer install --prefer-dist --no-progress --no-suggest
+
     - name: Run Tests
-      run: vendor/bin/phpunit tests/Feature/PhotoEnhancerTest.php
+      run: phpunit tests/Feature/PhotoEnhancerTest.php
 
 
